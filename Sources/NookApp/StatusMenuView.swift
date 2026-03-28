@@ -135,7 +135,32 @@ private struct PopoverMenuRow: View {
         .buttonStyle(.plain)
         .foregroundStyle(isHovered ? .white : .primary)
         .background(isHovered ? Color(nsColor: NSColor(red: 0.075, green: 0.376, blue: 0.702, alpha: 1.0)) : .clear)
-        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 4, bottomLeadingRadius: isLast ? 12 : 4, bottomTrailingRadius: isLast ? 12 : 4, topTrailingRadius: 4))
+        .clipShape(MenuRowShape(cornerRadius: 4, bottomCornerRadius: isLast ? 12 : 4))
         .onHover { isHovered = $0 }
+    }
+}
+
+private struct MenuRowShape: Shape {
+    var cornerRadius: CGFloat
+    var bottomCornerRadius: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let tl = cornerRadius
+        let tr = cornerRadius
+        let bl = bottomCornerRadius
+        let br = bottomCornerRadius
+
+        path.move(to: CGPoint(x: rect.minX + tl, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX - tr, y: rect.minY))
+        path.addArc(tangent1End: CGPoint(x: rect.maxX, y: rect.minY), tangent2End: CGPoint(x: rect.maxX, y: rect.minY + tr), radius: tr)
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - br))
+        path.addArc(tangent1End: CGPoint(x: rect.maxX, y: rect.maxY), tangent2End: CGPoint(x: rect.maxX - br, y: rect.maxY), radius: br)
+        path.addLine(to: CGPoint(x: rect.minX + bl, y: rect.maxY))
+        path.addArc(tangent1End: CGPoint(x: rect.minX, y: rect.maxY), tangent2End: CGPoint(x: rect.minX, y: rect.maxY - bl), radius: bl)
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.minY + tl))
+        path.addArc(tangent1End: CGPoint(x: rect.minX, y: rect.minY), tangent2End: CGPoint(x: rect.minX + tl, y: rect.minY), radius: tl)
+        path.closeSubpath()
+        return path
     }
 }
