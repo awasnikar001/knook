@@ -30,3 +30,12 @@ Preview release flow:
 KNOOK_UNSIGNED_PREVIEW=1 packaging/macos/release.sh 0.1.0
 gh release create v0.1.0 build/knook-0.1.0.dmg --title "knook 0.1.0" --notes "Unsigned preview release."
 ```
+
+Current install guidance for users:
+
+```bash
+brew tap preetsuthar17/tap
+brew install --cask knook
+xattr -dr com.apple.quarantine /Applications/knook.app
+open /Applications/knook.app
+```
